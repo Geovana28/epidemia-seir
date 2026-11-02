@@ -4,7 +4,6 @@ Modelo epidemiológico SEIR (Suscetível-Exposto-Infectado-Recuperado) com cená
 
 ## 🚀 Funcionalidades
 
-- **Simulação Estocástica de Trajetórias (Gillespie / Tau-Leaping)** — Modelagem de flutuações discretas em populações finitas com faixas de confiança interquartis.
 - **Número Efetivo de Reprodução $R(t)$ em Tempo Real** — Monitoramento do limiar de extinção da epidemia ($R(t) < 1.0$).
 - **4 Cenários de Surto Calibrados** — COVID-19, Influenza, Sarampo, Ebola
 - **Compartimentos S-E-I-R** — Dinâmica temporal acoplada via Runge-Kutta de 4ª Ordem (RK4)
@@ -50,7 +49,7 @@ epidemia-seir/
 
 1. **Conservação Populacional e Mistura Homogênea**: Assume população total constante ($S + E + I + R = N$) no horizonte de curto prazo e probabilidade uniforme de contato entre indivíduos.
 2. **Tempos de Residência Exponenciais**: A formulação por EDOs de primeira ordem implica tempos de incubação ($\sigma^{-1}$) e infecciosidade ($\gamma^{-1}$) exponencialmente distribuídos.
-3. **Aproximação Estocástica**: As trajetórias estocásticas utilizam aproximação *tau-leaping* discreta para ilustrar variância demográfica em subpopulações finitas.
+3. **Modelo Determinístico**: A versão atual é puramente determinística (RK4). Simulação estocástica (Gillespie / *tau-leaping*) para populações finitas está no roadmap.
 
 ---
 
