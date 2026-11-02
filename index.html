@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SEIR Epidemiological Model Simulator — Interactive pandemic transmission and intervention dynamics.">
+    <title>SEIR Epidemic Simulator | Infectious Disease Dynamics</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="brand">
+                <span class="brand-icon">🦠</span>
+                <div>
+                    <h1>SEIR Epidemic Simulator</h1>
+                    <p class="subtitle">Mathematical Outbreak Modeling & Non-Pharmaceutical Interventions</p>
+                </div>
+            </div>
+            <div class="r0-badge-wrapper">
+                <div class="r0-badge" id="r0Badge">
+                    <span class="r0-label">Basic Reproduction Number</span>
+                    <span class="r0-val" id="r0Val">R₀ = 2.50</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Grid -->
+        <main class="main-layout">
+            <!-- Sidebar / Controls -->
+            <aside class="controls-panel">
+                <!-- Preset Outbreaks -->
+                <div class="panel-card">
+                    <div class="card-title">🔬 Outbreak Scenarios</div>
+                    <div class="scenario-buttons">
+                        <button class="btn-scenario active" data-preset="covid">COVID-19 Wildtype</button>
+                        <button class="btn-scenario" data-preset="flu">Seasonal Influenza</button>
+                        <button class="btn-scenario" data-preset="measles">Measles (High R₀)</button>
+                        <button class="btn-scenario" data-preset="ebola">Ebola Outbreak</button>
+                    </div>
+                </div>
+
+                <!-- Model Parameters -->
+                <div class="panel-card">
+                    <div class="card-title">⚙️ Disease Parameters</div>
+                    
+                    <div class="param-row">
+                        <div class="param-header">
+                            <label for="popTotal">Population (N)</label>
+                            <span class="param-display" id="popTotalVal">100,000</span>
+                        </div>
+                        <input type="range" id="popTotal" min="10000" max="1000000" step="10000" value="100000">
+                    </div>
+
+                    <div class="param-row">
+                        <div class="param-header">
+                            <label for="transmissionRate">Transmission Rate (β)</label>
+                            <span class="param-display" id="transmissionRateVal">0.50</span>
+                        </div>
+                        <input type="range" id="transmissionRate" min="0.05" max="2.00" step="0.01" value="0.50">
+                    </div>
+
+                    <div class="param-row">
+                        <div class="param-header">
+                            <label for="incubationDays">Incubation Period (1/σ)</label>
+                            <span class="param-display" id="incubationDaysVal">5.0 days</span>
+                        </div>
+                        <input type="range" id="incubationDays" min="1.0" max="21.0" step="0.5" value="5.0">
+                    </div>
+
+                    <div class="param-row">
+                        <div class="param-header">
+                            <label for="infectiousDays">Infectious Period (1/γ)</label>
+                            <span class="param-display" id="infectiousDaysVal">5.0 days</span>
+                        </div>
+                        <input type="range" id="infectiousDays" min="1.0" max="21.0" step="0.5" value="5.0">
+                    </div>
+                </div>
+
+                <!-- Public Health Interventions -->
+                <div class="panel-card">
+                    <div class="card-title">🛡️ Interventions & Mitigations</div>
+
+                    <div class="param-row">
+                        <div class="param-header">
+                            <label for="lockdownEff">Transmission Reduction (Lockdown / Masks)</label>
+                            <span class="param-display" id="lockdownEffVal">0%</span>
+                        </div>
+                        <input type="range" id="lockdownEff" min="0" max="90" step="5" value="0">
+                    </div>
+
+                    <div class="param-row">
+                        <div class="param-header">
+                            <label for="lockdownDay">Intervention Start (Day)</label>
+                            <span class="param-display" id="lockdownDayVal">Day 25</span>
+                        </div>
+                        <input type="range" id="lockdownDay" min="0" max="150" step="5" value="25">
+                    </div>
+
+                    <div class="param-row">
+                        <div class="param-header">
+                            <label for="vaccinationRate">Daily Vaccination Rate</label>
+                            <span class="param-display" id="vaccinationRateVal">0.0% / day</span>
+                        </div>
+                        <input type="range" id="vaccinationRate" min="0.0" max="2.0" step="0.1" value="0.0">
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Analytics & Graph -->
+            <section class="display-panel">
+                <!-- Compartment Quick Stats -->
+                <div class="compartments-grid">
+                    <div class="stat-box comp-s">
+                        <div class="stat-tag">Susceptible (S)</div>
+                        <div class="stat-number" id="kpiS">99,990</div>
+                        <div class="stat-pct" id="kpiSpct">99.99%</div>
+                    </div>
+                    <div class="stat-box comp-e">
+                        <div class="stat-tag">Exposed / Latent (E)</div>
+                        <div class="stat-number" id="kpiE">0</div>
+                        <div class="stat-pct" id="kpiEpct">0.00%</div>
+                    </div>
+                    <div class="stat-box comp-i">
+                        <div class="stat-tag">Infectious (I)</div>
+                        <div class="stat-number" id="kpiI">10</div>
+                        <div class="stat-pct" id="kpiIpct">0.01%</div>
+                    </div>
+                    <div class="stat-box comp-r">
+                        <div class="stat-tag">Removed / Immune (R)</div>
+                        <div class="stat-number" id="kpiR">0</div>
+                        <div class="stat-pct" id="kpiRpct">0.00%</div>
+                    </div>
+                </div>
+
+                <!-- Simulation Chart -->
+                <div class="chart-wrapper">
+                    <div class="chart-header-row">
+                        <h3>Epidemic Curve Over Time</h3>
+                        <div class="hospital-capacity-toggle">
+                            <label>
+                                <input type="checkbox" id="chkCapacity" checked>
+                                Show Hospital Capacity Threshold
+                            </label>
+                        </div>
+                    </div>
+                    <div class="canvas-container">
+                        <canvas id="seirChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Outbreak Metrics & Impact -->
+                <div class="impact-grid">
+                    <div class="impact-card">
+                        <h4>Peak Infection Load</h4>
+                        <div class="impact-val" id="peakInfections">23,450</div>
+                        <p class="impact-sub" id="peakDay">Occurs on Day 42</p>
+                    </div>
+                    <div class="impact-card">
+                        <h4>Total Attack Rate</h4>
+                        <div class="impact-val" id="totalAttack">89.2%</div>
+                        <p class="impact-sub" id="totalInfectedCount">89,200 total infected</p>
+                    </div>
+                    <div class="impact-card">
+                        <h4>Herd Immunity Threshold</h4>
+                        <div class="impact-val" id="hitVal">60.0%</div>
+                        <p class="impact-sub">1 − 1/R₀</p>
+                    </div>
+                    <div class="impact-card">
+                        <h4>Healthcare Stress Level</h4>
+                        <div class="impact-val text-warning" id="capacityStatus">Surpassed 3.4x</div>
+                        <p class="impact-sub">ICU overflow condition</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

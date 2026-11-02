@@ -1,0 +1,359 @@
+/* ============================================================
+   SEIR EPIDEMIC SIMULATOR — DESIGN SYSTEM
+   Dark Epidemic Intelligence Theme (Slate + Crimson/Amber/Cyan)
+   ============================================================ */
+
+:root {
+    --bg-dark: #080c14;
+    --bg-surface: #101622;
+    --bg-panel: rgba(18, 26, 40, 0.85);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.18);
+
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-faint: #64748b;
+
+    /* Compartment colors */
+    --color-s: #38bdf8; /* Susceptible - Cyan */
+    --color-e: #f59e0b; /* Exposed - Amber */
+    --color-i: #f43f5e; /* Infectious - Crimson */
+    --color-r: #10b981; /* Recovered - Emerald */
+
+    --font-primary: 'Inter', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    background-image: 
+        radial-gradient(circle at 15% 15%, rgba(244, 63, 94, 0.06), transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(56, 189, 248, 0.06), transparent 40%);
+    min-height: 100vh;
+    padding: 1.25rem;
+}
+
+.app-container {
+    max-width: 1540px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Header */
+.app-header {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(16px);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.brand-icon {
+    font-size: 2rem;
+    background: rgba(244, 63, 94, 0.12);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    padding: 0.4rem 0.6rem;
+    border-radius: var(--radius-md);
+}
+
+.brand h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.r0-badge {
+    background: rgba(244, 63, 94, 0.15);
+    border: 1px solid rgba(244, 63, 94, 0.4);
+    border-radius: var(--radius-md);
+    padding: 0.55rem 1rem;
+    text-align: right;
+}
+
+.r0-label {
+    display: block;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+}
+
+.r0-val {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-i);
+}
+
+/* Main Layout */
+.main-layout {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 1.25rem;
+}
+
+@media (max-width: 1040px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Controls Panel */
+.controls-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.panel-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.15rem;
+    backdrop-filter: blur(12px);
+}
+
+.card-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-main);
+    margin-bottom: 0.9rem;
+}
+
+.scenario-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.btn-scenario {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    padding: 0.5rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.74rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.btn-scenario:hover {
+    background: rgba(244, 63, 94, 0.1);
+    color: var(--color-i);
+    border-color: rgba(244, 63, 94, 0.3);
+}
+
+.btn-scenario.active {
+    background: rgba(244, 63, 94, 0.2);
+    color: #fff;
+    border-color: var(--color-i);
+    box-shadow: 0 0 10px rgba(244, 63, 94, 0.3);
+}
+
+.param-row {
+    margin-bottom: 0.85rem;
+}
+
+.param-row:last-child {
+    margin-bottom: 0;
+}
+
+.param-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    margin-bottom: 0.35rem;
+}
+
+.param-header label {
+    color: var(--text-muted);
+}
+
+.param-display {
+    font-family: var(--font-mono);
+    color: var(--color-s);
+    font-weight: 600;
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--color-s);
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+}
+
+/* Display Panel */
+.display-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.compartments-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.85rem;
+}
+
+@media (max-width: 800px) {
+    .compartments-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.stat-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    border-top: 3px solid transparent;
+}
+
+.stat-box.comp-s { border-top-color: var(--color-s); }
+.stat-box.comp-e { border-top-color: var(--color-e); }
+.stat-box.comp-i { border-top-color: var(--color-i); }
+.stat-box.comp-r { border-top-color: var(--color-r); }
+
+.stat-tag {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-faint);
+    margin-bottom: 0.25rem;
+}
+
+.stat-number {
+    font-family: var(--font-mono);
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.stat-pct {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Chart */
+.chart-wrapper {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+}
+
+.chart-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.chart-header-row h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.hospital-capacity-toggle label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.canvas-container {
+    height: 380px;
+    width: 100%;
+}
+
+/* Impact Metrics */
+.impact-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.85rem;
+}
+
+@media (max-width: 900px) {
+    .impact-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.impact-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+}
+
+.impact-card h4 {
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-faint);
+    margin-bottom: 0.25rem;
+}
+
+.impact-val {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.impact-sub {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+}
+
+.text-warning {
+    color: var(--color-i);
+}
