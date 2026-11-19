@@ -357,3 +357,134 @@ input[type="range"]::-webkit-slider-thumb {
 .text-warning {
     color: var(--color-i);
 }
+
+
+/* ==========================================================================
+   MONOCHROME STRUCTURAL ENGINEERING DESIGN SYSTEM OVERRIDE
+   Bans AI dashboard cliches: gradients, glassmorphism, neon glow, shadows
+   ========================================================================== */
+:root {
+    --bg-primary: #0b0b0d !important;
+    --bg-secondary: #121215 !important;
+    --bg-dark: #0b0b0d !important;
+    --bg-base: #0b0b0d !important;
+    --bg-main: #0b0b0d !important;
+    --bg-surface: #121215 !important;
+    --bg-card: #121215 !important;
+    --bg-panel: #121215 !important;
+    --bg-card-hover: #18181c !important;
+    --bg-glass: #0b0b0d !important;
+    --bg-glass-hover: #18181c !important;
+    --border-subtle: #242429 !important;
+    --border-color: #242429 !important;
+    --border-active: #323238 !important;
+    --border-bright: #323238 !important;
+    --border-focus: #f43f5e !important;
+    --text-primary: #f4f4f6 !important;
+    --text-main: #f4f4f6 !important;
+    --text-secondary: #a1a1aa !important;
+    --text-muted: #71717a !important;
+    --text-faint: #71717a !important;
+    --accent: #f43f5e !important;
+    --neon: #f43f5e !important;
+    --gold: #f43f5e !important;
+    --cyan-primary: #f43f5e !important;
+    --radius-sm: 4px !important;
+    --radius-md: 6px !important;
+    --radius-lg: 6px !important;
+    --radius-xl: 6px !important;
+    --shadow-sm: none !important;
+    --shadow-md: none !important;
+    --shadow-lg: none !important;
+    --shadow-glow: none !important;
+    --shadow-glow-prey: none !important;
+    --shadow-glow-pred: none !important;
+}
+
+body {
+    background: #0b0b0d !important;
+    background-image: none !important;
+    color: #f4f4f6 !important;
+}
+
+body::before, body::after {
+    display: none !important;
+}
+
+*, *::before, *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+.header, .app-header, .top-bar, .navbar {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid #242429 !important;
+    border-radius: 0 !important;
+    padding: 0 0 18px 0 !important;
+    margin-bottom: 8px !important;
+}
+
+.logo-icon, .brand-icon, .header-icon, .pulse-dot, .pulse-indicator, .live-dot, .status-dot {
+    display: none !important;
+}
+
+h1, .header h1, .app-header h1 {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    -webkit-text-fill-color: #f4f4f6 !important;
+    background-clip: initial !important;
+    color: #f4f4f6 !important;
+    font-size: 1.45rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.025em !important;
+}
+
+.badge, .badge-accent, .status-badge, .header-badge, .pill-badge {
+    background: #121215 !important;
+    border: 1px solid #242429 !important;
+    color: #71717a !important;
+    border-radius: 4px !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.7rem !important;
+    font-weight: 500 !important;
+}
+
+.card, .panel, .control-panel, .sidebar-panel, .metric-card, .kpi-card, .stat-card, .canvas-wrapper, .chart-card, .panel-card, .formula-card, .info-card {
+    background: #121215 !important;
+    border: 1px solid #242429 !important;
+    border-radius: 6px !important;
+}
+
+.metric-value, .kpi-value, .stat-value {
+    font-family: var(--font-mono) !important;
+    color: #f4f4f6 !important;
+    font-weight: 600 !important;
+}
+
+button, .btn, .btn-primary, .preset-btn, .action-btn {
+    border-radius: 4px !important;
+}
+
+.btn-primary, .btn-play, .btn-run {
+    background: #f4f4f6 !important;
+    color: #0b0b0d !important;
+    border: 1px solid #f4f4f6 !important;
+    font-weight: 600 !important;
+}
+
+input[type="range"] {
+    height: 4px !important;
+    background: #323238 !important;
+    border-radius: 2px !important;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    width: 14px !important;
+    height: 14px !important;
+    background: #f43f5e !important;
+    border: 2px solid #0b0b0d !important;
+    border-radius: 50% !important;
+}
